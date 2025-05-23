@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIGILANTE - Design with Precision. Develop with Purpose.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        /* Custom Styles for VIGILANTE Website */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Primary dark background */
+            color: #e0e0e0; /* Light gray for general text */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Canvas for 3D animation in hero section */
+        #hero-3d-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block; /* Ensure it takes full space */
+            z-index: -1; /* Behind content */
+            opacity: 0.2; /* Subtle opacity */
+        }
+
+        /* Card styles for services and portfolio */
+        .card {
+            background-color: #1a1a1a; /* Darker background for cards */
+            border: 1px solid rgba(220, 38, 38, 0.3); /* Subtle red border */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(220, 38, 38, 0.3);
+            background-color: #2a2a2a; /* Slightly lighter on hover */
+        }
+
+        /* CTA button styling */
+        .cta-button {
+            background-color: #DC2626; /* Bold red */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
+        }
+
+        .cta-button:hover {
+            background-color: #EF4444; /* Lighter red on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.7);
+        }
+
+        /* Section headings */
+        .section-heading {
+            color: #DC2626; /* Bold red for headings */
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Checkmark icon color */
+        .checkmark-icon {
+            color: #34D399; /* Green for checkmarks */
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #DC2626;
+            border-radius: 10px;
+            border: 2px solid #1a1a1a;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="fixed top-0 left-0 w-full bg-gray-950 bg-opacity-90 backdrop-blur-sm z-50 py-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-4 md:px-8">
+            <a href="#" class="flex items-center space-x-2">
+                <svg class="w-10 h-10 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 1L2 22h3.5L12 7.5L18.5 22H22L12 1z"/>
+                </svg>
+                <span class="text-3xl font-extrabold text-red-600 uppercase">VIGILANTE</span>
+            </a>
+
+            <button id="mobile-menu-button" class="md:hidden text-gray-100 focus:outline-none" aria-label="Open mobile menu">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+
+            <ul class="hidden md:flex space-x-8 text-lg font-medium">
+                <li><a href="#hero" class="text-gray-300 hover:text-red-500 transition-colors duration-300">Home</a></li>
+                <li><a href="#services" class="text-gray-300 hover:text-red-500 transition-colors duration-300">Services</a></li>
+                <li><a href="#portfolio" class="text-gray-300 hover:text-red-500 transition-colors duration-300">Portfolio</a></li>
+                <li><a href="#why-choose-us" class="text-gray-300 hover:text-red-500 transition-colors duration-300">Why Choose Us</a></li>
+                <li><a href="#about-us" class="text-gray-300 hover:text-red-500 transition-colors duration-300">About Us</a></li>
+                <li><a href="#contact" class="cta-button hover:bg-red-700">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 mt-4 py-4 px-4 shadow-lg">
+            <ul class="flex flex-col space-y-4 text-center text-lg font-medium">
+                <li><a href="#hero" class="text-gray-300 hover:text-red-500 transition-colors duration-300 block py-2">Home</a></li>
+                <li><a href="#services" class="text-gray-300 hover:text-red-500 transition-colors duration-300 block py-2">Services</a></li>
+                <li><a href="#portfolio" class="text-gray-300 hover:text-red-500 transition-colors duration-300 block py-2">Portfolio</a></li>
+                <li><a href="#why-choose-us" class="text-gray-300 hover:text-red-500 transition-colors duration-300 block py-2">Why Choose Us</a></li>
+                <li><a href="#about-us" class="text-gray-300 hover:text-red-500 transition-colors duration-300 block py-2">About Us</a></li>
+                <li><a href="#contact" class="cta-button w-full block mt-4">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative flex items-center justify-center min-h-screen text-center overflow-hidden pt-20 pb-10">
+        <canvas id="hero-3d-canvas"></canvas>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="mb-6 flex justify-center">
+                <svg class="w-32 h-32 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 1L2 22h3.5L12 7.5L18.5 22H22L12 1z"/>
+                </svg>
+            </div>
+            <h1 class="text-6xl md:text-8xl font-extrabold text-red-600 uppercase leading-tight mb-4 drop-shadow-lg">
+                VIGILANTE
+            </h1>
+            <p class="text-2xl md:text-3xl text-gray-300 font-light italic mb-8 max-w-3xl mx-auto">
+                Design with Precision. Develop with Purpose.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <a href="#contact" class="cta-button text-xl">Start Your Project</a>
+                <a href="#contact" class="cta-button bg-gray-700 hover:bg-gray-600 border border-gray-600 text-xl">Get a Free Consultation</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-16 md:py-24 bg-gray-950">
+        <div class="container mx-auto px-4 md:px-8">
+            <h2 class="text-4xl md:text-5xl section-heading">🚀 Services We Offer</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card p-6 rounded-lg text-center flex flex-col items-center">
+                    <i class="fas fa-palette text-red-500 text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-100 mb-2">UI/UX Design</h3>
+                    <p class="text-gray-400">Crafting intuitive and engaging user interfaces for an exceptional user experience.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center flex flex-col items-center">
+                    <i class="fas fa-code text-red-500 text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-100 mb-2">Web & Mobile App Development</h3>
+                    <p class="text-gray-400">Building robust and scalable web solutions and high-performance mobile applications.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center flex flex-col items-center">
+                    <i class="fas fa-brush text-red-500 text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-100 mb-2">Branding & Graphic Design</h3>
+                    <p class="text-gray-400">Developing strong brand identities and compelling visual assets that resonate.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center flex flex-col items-center">
+                    <i class="fas fa-chart-line text-red-500 text-5xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-100 mb-2">Digital Marketing Strategy</h3>
+                    <p class="text-gray-400">Driving growth and visibility through tailored digital marketing campaigns.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 md:px-8">
+            <h2 class="text-4xl md:text-5xl section-heading">Our Latest Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card rounded-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/600x400/1C1C1C/DC2626?text=Project+1" alt="Project Image" class="w-full h-auto">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">E-commerce Platform Redesign</h3>
+                        <p class="text-gray-400 text-sm mb-4">Enhanced user experience and conversion rates for a leading online retailer.</p>
+                        <a href="#" class="text-red-500 hover:text-red-400 font-semibold text-lg transition-colors">View Case Study <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+                <div class="card rounded-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/600x400/1C1C1C/DC2626?text=Project+2" alt="Project Image" class="w-full h-auto">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Mobile Banking App</h3>
+                        <p class="text-gray-400 text-sm mb-4">Developed a secure and intuitive mobile application for a fintech startup.</p>
+                        <a href="#" class="text-red-500 hover:text-red-400 font-semibold text-lg transition-colors">View Case Study <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+                <div class="card rounded-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/600x400/1C1C1C/DC2626?text=Project+3" alt="Project Image" class="w-full h-auto">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Startup Brand Identity</h3>
+                        <p class="text-gray-400 text-sm mb-4">Created a distinctive brand identity and guidelines for a new technology venture.</p>
+                        <a href="#" class="text-red-500 hover:text-red-400 font-semibold text-lg transition-colors">View Case Study <i class="fas fa-arrow-right ml-2"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="cta-button text-xl">View All Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-choose-us" class="py-16 md:py-24 bg-gray-950">
+        <div class="container mx-auto px-4 md:px-8">
+            <h2 class="text-4xl md:text-5xl section-heading">📌 Why Choose VIGILANTE?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="card p-6 rounded-lg flex items-start space-x-4">
+                    <i class="checkmark-icon fas fa-check-circle text-4xl mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Creative UI Designers</h3>
+                        <p class="text-gray-400">Our designers push boundaries to create visually stunning and user-friendly interfaces that stand out.</p>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg flex items-start space-x-4">
+                    <i class="checkmark-icon fas fa-check-circle text-4xl mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Pro Developers</h3>
+                        <p class="text-gray-400">Leverage the expertise of our seasoned developers who build robust, scalable, and secure solutions.</p>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg flex items-start space-x-4">
+                    <i class="checkmark-icon fas fa-check-circle text-4xl mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Fast Turnaround</h3>
+                        <p class="text-gray-400">We optimize our workflows to deliver high-quality results efficiently, meeting your deadlines without compromise.</p>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg flex items-start space-x-4">
+                    <i class="checkmark-icon fas fa-check-circle text-4xl mt-1"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-2">Affordable Packages for Startups</h3>
+                        <p class="text-gray-400">Get premium design and development services without breaking the bank, perfect for budding businesses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-us" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 md:px-8 text-center max-w-4xl">
+            <h2 class="text-4xl md:text-5xl section-heading">About VIGILANTE</h2>
+            <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
+                At **VIGILANTE**, we are more than just a creative tech agency; we are your dedicated partners in innovation. Founded on the principles of **precision in design** and **purpose in development**, our mission is to empower businesses and startups with exceptional digital solutions that drive growth and create lasting impact.
+            </p>
+            <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                Our passionate team of expert UI/UX designers, seasoned developers, and strategic marketing specialists works collaboratively to bring your vision to life. We believe in crafting experiences that are not only aesthetically captivating but also functionally superior, ensuring every pixel and every line of code serves a clear purpose. Choose VIGILANTE for a partner who is vigilant about your success.
+            </p>
+        </div>
+    </section>
+
+    <section id="testimonials" class="py-16 md:py-24 bg-gray-950">
+        <div class="container mx-auto px-4 md:px-8">
+            <h2 class="text-4xl md:text-5xl section-heading">What Our Clients Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-lg">
+                    <p class="text-gray-300 italic mb-4">"VIGILANTE transformed our outdated website into a modern, engaging platform. Their UI/UX design is unparalleled, and the development process was seamless."</p>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://via.placeholder.com/50/DC2626/FFFFFF?text=JD" alt="Client Avatar" class="w-12 h-12 rounded-full border-2 border-red-500">
+                        <div>
+                            <p class="font-bold text-gray-100">Jane Doe</p>
+                            <p class="text-sm text-gray-400">CEO, Tech Innovations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <p class="text-gray-300 italic mb-4">"Their team truly understood our brand vision and delivered an outstanding mobile app far beyond our expectations. Highly recommend their pro developers!"</p>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://via.placeholder.com/50/DC2626/FFFFFF?text=SM" alt="Client Avatar" class="w-12 h-12 rounded-full border-2 border-red-500">
+                        <div>
+                            <p class="font-bold text-gray-100">Sam Miller</p>
+                            <p class="text-sm text-gray-400">Founder, Evolve Fitness</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <p class="text-gray-300 italic mb-4">"The digital marketing strategy implemented by VIGILANTE yielded immediate and measurable results. Their expertise is invaluable for startups like ours."</p>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://via.placeholder.com/50/DC2626/FFFFFF?text=AL" alt="Client Avatar" class="w-12 h-12 rounded-full border-2 border-red-500">
+                        <div>
+                            <p class="font-bold text-gray-100">Alex Lee</p>
+                            <p class="text-sm text-gray-400">CMO, Future Brands</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 md:px-8 max-w-3xl">
+            <h2 class="text-4xl md:text-5xl section-heading">Let's Talk About Your Project</h2>
+            <p class="text-lg text-gray-300 text-center mb-10">
+                Ready to transform your ideas into reality? Fill out the form below or contact us directly.
+            </p>
+
+            <form class="space-y-6">
+                <div>
+                    <label for="name" class="block text-gray-300 text-sm font-bold mb-2">Your Name</label>
+                    <input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors" placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-300 text-sm font-bold mb-2">Your Email</label>
+                    <input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors" placeholder="john.doe@example.com">
+                </div>
+                <div>
+                    <label for="service" class="block text-gray-300 text-sm font-bold mb-2">Service of Interest</label>
+                    <select id="service" name="service" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors">
+                        <option value="">Select a Service</option>
+                        <option value="ui_ux">UI/UX Design</option>
+                        <option value="web_mobile_dev">Web & Mobile App Development</option>
+                        <option value="branding_graphics">Branding & Graphic Design</option>
+                        <option value="digital_marketing">Digital Marketing Strategy</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="message" class="block text-gray-300 text-sm font-bold mb-2">Your Message</label>
+                    <textarea id="message" name="message" rows="5" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors" placeholder="Tell us about your project..."></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="cta-button px-8 py-3 text-xl">Send Message</button>
+                </div>
+            </form>
+
+            <div class="mt-12 text-center space-y-4">
+                <p class="text-xl text-gray-200"><i class="fas fa-phone-alt text-red-500 mr-3"></i> +8801735968803</p>
+                <p class="text-xl text-gray-200"><i class="fas fa-envelope text-red-500 mr-3"></i> mynulislamtanim@gmail.com</p>
+                <div class="flex justify-center space-x-6 mt-6">
+                    <a href="https://facebook.com/yourprofile" target="_blank" rel="noopener" title="Facebook" class="text-gray-400 hover:text-red-500 transition-colors text-3xl"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://linkedin.com/company/yourcompany" target="_blank" rel="noopener" title="LinkedIn" class="text-gray-400 hover:text-red-500 transition-colors text-3xl"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener" title="Twitter" class="text-400 hover:text-red-500 transition-colors text-3xl"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-950 py-10 text-center text-gray-500 text-sm border-t border-gray-800">
+        <div class="container mx-auto px-4 md:px-8">
+            <p>&copy; 2025 VIGILANTE. All rights reserved.</p>
+            <div class="mt-2 space-x-4">
+                <a href="#" class="hover:text-red-500 transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-red-500 transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle logic
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Hide mobile menu when a link is clicked (for smooth scrolling)
+        document.querySelectorAll('#mobile-menu a').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // Three.js 3D Animation for Hero Section
+        let scene, camera, renderer, particles, controls;
+
+        function init3D() {
+            // Scene setup
+            scene = new THREE.Scene();
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5; // Initial camera position
+
+            // Renderer setup
+            const canvas = document.getElementById('hero-3d-canvas');
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // For sharper rendering on high-DPI screens
+
+            // Particles geometry
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 2000; // Number of particles
+            const posArray = new Float32Array(particlesCount * 3); // x, y, z for each particle
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                // Random positions within a cube
+                posArray[i] = (Math.random() - 0.5) * 10; // -5 to 5
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            // Particles material
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02, // Size of each particle
+                color: 0xDC2626, // Bold red color
+                transparent: true,
+                blending: THREE.AdditiveBlending, // For glowing effect
+                depthWrite: false // Improves transparency rendering
+            });
+
+            // Create particles system
+            particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+
+            // OrbitControls for mouse interaction
+            // FIX: Changed OrbitControls to THREE.OrbitControls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true; // Smooth camera movement
+            controls.dampingFactor = 0.05;
+            controls.enableZoom = false; // Disable zooming
+            controls.autoRotate = true; // Auto-rotate the scene
+            controls.autoRotateSpeed = 0.2; // Rotation speed
+
+            // Handle window resizing
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            // Update particles movement (subtle floating/swirling)
+            particles.rotation.y += 0.0005;
+            particles.rotation.x += 0.0002;
+
+            // Update controls
+            controls.update();
+
+            // Render the scene
+            renderer.render(scene, camera);
+        }
+
+        // Initialize and start animation when the window loads
+        window.onload = function() {
+            init3D();
+            animate3D();
+        };
+    </script>
+</body>
+</html>
